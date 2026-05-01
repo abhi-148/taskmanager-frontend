@@ -73,8 +73,10 @@ export default function Tasks() {
   }, []);
 
   useEffect(() => {
+  if (selectedProject) {
     fetchTasks();
-  }, [selectedProject]);
+  }
+}, [selectedProject]);
 
   // ==========================
   // CREATE TASK
