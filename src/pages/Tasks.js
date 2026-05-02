@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import API from "../api/api";
 import "./tasks.css";
 
@@ -21,6 +21,8 @@ export default function Tasks() {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
   const [loading, setLoading] = useState(false);
+
+  const hasMounted = useRef(false);
 
   // ==========================
   // FETCH PROJECTS
@@ -53,7 +55,7 @@ export default function Tasks() {
   // ==========================
   // FETCH TASKS
   // ==========================
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     if (!selectedProject) return;
 
     try {
@@ -65,18 +67,22 @@ export default function Tasks() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedProject]);
 
+  // INITIAL LOAD
   useEffect(() => {
     fetchProjects();
     fetchUsers();
   }, []);
 
+  // SAFE FETCH (NO ESLINT ERROR)
   useEffect(() => {
-  if (selectedProject) {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
     fetchTasks();
-  }
-}, [selectedProject]);
+  }, [selectedProject, fetchTasks]);
 
   // ==========================
   // CREATE TASK
@@ -161,11 +167,9 @@ export default function Tasks() {
 
       <h1>📋 Task Manager</h1>
 
-      {/* 🔥 PROJECT SELECT */}
       <select
         value={selectedProject}
         onChange={(e) => setSelectedProject(e.target.value)}
-        style={{ marginBottom: "10px", padding: "6px" }}
       >
         {projects.map((p) => (
           <option key={p._id} value={p._id}>
@@ -174,7 +178,6 @@ export default function Tasks() {
         ))}
       </select>
 
-      {/* ================= CREATE ================= */}
       <div className="task-form">
 
         <input
@@ -207,12 +210,11 @@ export default function Tasks() {
             setForm({ ...form, priority: e.target.value })
           }
         >
-          <option value="low">🟢 Low</option>
-          <option value="medium">🟡 Medium</option>
-          <option value="high">🔴 High</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
         </select>
 
-        {/* 🔥 ASSIGN USER */}
         <select
           value={form.assignedTo}
           onChange={(e) =>
@@ -227,17 +229,13 @@ export default function Tasks() {
           ))}
         </select>
 
-        <button onClick={createTask} disabled={!form.title}>
-          ➕ Add
-        </button>
+        <button onClick={createTask}>Add</button>
 
       </div>
 
-      {/* ================= CONTROLS ================= */}
       <div className="controls">
-
         <input
-          placeholder="🔍 Search..."
+          placeholder="Search..."
           onChange={(e) => setSearch(e.target.value)}
         />
 
@@ -245,10 +243,8 @@ export default function Tasks() {
           <option value="newest">Newest</option>
           <option value="oldest">Oldest</option>
         </select>
-
       </div>
 
-      {/* ================= FILTER ================= */}
       <div className="filters">
         <button onClick={() => setFilter("all")}>All</button>
         <button onClick={() => setFilter("todo")}>Todo</button>
@@ -256,83 +252,47 @@ export default function Tasks() {
         <button onClick={() => setFilter("done")}>Done</button>
       </div>
 
-      {/* ================= TASK LIST ================= */}
       {loading ? (
         <div className="loader"></div>
       ) : filtered.length === 0 ? (
         <p className="empty">No tasks found</p>
       ) : (
         <div className="task-grid">
-          {filtered.map((task) => {
+          {filtered.map((task) => (
+            <div key={task._id} className="task-card">
 
-            let daysLeft = null;
-            if (task.dueDate) {
-              daysLeft = Math.ceil(
-                (new Date(task.dueDate) - new Date()) /
-                (1000 * 60 * 60 * 24)
-              );
-            }
+              <h3>{task.title}</h3>
+              <p>{task.description}</p>
 
-            return (
-              <div
-                key={task._id}
-                className={`task-card ${task.isOverdue ? "overdue" : ""}`}
-              >
+              <p>Priority: {task.priority}</p>
 
-                <h3>{task.title}</h3>
-                <p>{task.description}</p>
+              <p>
+                Due:{" "}
+                {task.dueDate
+                  ? new Date(task.dueDate).toDateString()
+                  : "N/A"}
+              </p>
 
-                <span className={`priority ${task.priority}`}>
-                  {task.priority}
-                </span>
+              <p>👤 {task.assignedTo?.name || "Unassigned"}</p>
 
-                <p className="date">
-                  Due: {task.dueDate
-                    ? new Date(task.dueDate).toDateString()
-                    : "N/A"}
-                </p>
+              <p>Status: {task.status}</p>
 
-                {/* 🔥 ASSIGNED USER */}
-                <p className="assigned">
-                  👤 {task.assignedTo?.name || "Unassigned"}
-                </p>
+              <div className="actions">
+                <button onClick={() => updateStatus(task._id, "in-progress")}>
+                  Start
+                </button>
 
-                {daysLeft !== null && (
-                  <p className="countdown">
-                    {daysLeft < 0
-                      ? "❌ Overdue"
-                      : daysLeft === 0
-                      ? "⚠️ Due Today"
-                      : `⏳ ${daysLeft} days left`}
-                  </p>
-                )}
+                <button onClick={() => updateStatus(task._id, "done")}>
+                  Done
+                </button>
 
-                <span className={`status ${task.status}`}>
-                  {task.status}
-                </span>
-
-                <div className="actions">
-
-                  <button onClick={() => updateStatus(task._id, "in-progress")}>
-                    🚧 Start
-                  </button>
-
-                  <button onClick={() => updateStatus(task._id, "done")}>
-                    ✅ Done
-                  </button>
-
-                  <button
-                    className="delete"
-                    onClick={() => deleteTask(task._id)}
-                  >
-                    ❌ Delete
-                  </button>
-
-                </div>
-
+                <button onClick={() => deleteTask(task._id)}>
+                  Delete
+                </button>
               </div>
-            );
-          })}
+
+            </div>
+          ))}
         </div>
       )}
 
