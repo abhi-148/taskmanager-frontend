@@ -1,70 +1,121 @@
-# Getting Started with Create React App
+# 🚀 Team Task Manager (MERN Stack)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack Task Management Web Application where users can create projects, assign tasks, and track progress with role-based access (Admin / Member).
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🌐 Live Demo
 
-### `npm start`
+* 🔗 Frontend: https://taskmanager-frontend-i5cm.vercel.app/
+* 🔗 Backend: https://backendtaskapp-1.onrender.com
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 📌 Features
 
-### `npm test`
+### 🔐 Authentication
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* User Signup & Login
+* JWT-based authentication
+* Protected routes
 
-### `npm run build`
+### 📁 Project Management
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* Create and manage projects
+* Select project to view tasks
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 👥 Team Management
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+* Assign tasks to users
+* View assigned user
 
-### `npm run eject`
+### 📋 Task Management
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+* Create, update, delete tasks
+* Set priority (Low / Medium / High)
+* Add due date
+* Change task status (Todo → In Progress → Done)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 📊 Dashboard
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+* Total tasks
+* Completed tasks
+* Pending tasks
+* In-progress tasks
+* Overdue tasks
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## 🛠 Tech Stack
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Frontend
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* React.js
+* CSS
+* Axios
 
-### Code Splitting
+### Backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+* Node.js
+* Express.js
 
-### Analyzing the Bundle Size
+### Database
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+* MongoDB (NoSQL)
 
-### Making a Progressive Web App
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## ⚙️ Installation (Local Setup)
 
-### Advanced Configuration
+### 1. Clone repo
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```bash
+git clone https://github.com/abhi-148/taskmanager-frontend
+```
 
-### Deployment
+### 2. Install dependencies
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```bash
+npm install
+```
 
-### `npm run build` fails to minify
+### 3. Start app
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+npm start
+```
+
+---
+
+## 🔐 Environment Variables (Backend)
+
+```env
+MONGO_URI=your_mongodb_connection
+JWT_SECRET=your_secret_key
+PORT=5000
+```
+
+---
+
+## 📦 API Endpoints
+
+* POST /api/auth/signup
+* POST /api/auth/login
+* GET /api/tasks
+* POST /api/tasks
+* PUT /api/tasks/:id
+* DELETE /api/tasks/:id
+* GET /api/projects
+
+---
+
+## 📽 Demo Video
+
+(Attach your demo video link here)
+
+---
+
+## 👨‍💻 Author
+
+Abhishek Kumar
+GitHub: https://github.com/abhi-148
